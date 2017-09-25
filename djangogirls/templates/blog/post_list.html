@@ -9,6 +9,13 @@
 </head>
 <body>
 <h1>Post list</h1>
+
+{% for post in posts %}
+
+    <div>{{ post.title }}</div>
+    <div>{{ post.content|truncatewords:10 }}</div>
+{% endfor %}
+
 </body>
 </html>
 
