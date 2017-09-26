@@ -1,32 +1,15 @@
-<!--static 태그를 사용하기 위해서는 불러와서 사용해야 한다.   -->
-{% load static %}
-
-<!doctype html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>블로깅 테스트</title>
-    <!-- 정적파일을 참조하는 템플릿 static 태그 - (STATICFILES_DIRS의 path를 기준으로 상대경로) -->
-    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
-    <link rel="stylesheet" href="{% static 'css/blog.css' %}">
-</head>
-<body>
-<div class="blog-header">
-    <div class="container">
-        <h2 class="blog-title"><a href="">나의 블로그</a></h2>
-    </div>
-
-</div>
+{% extends 'base.html' %}
+<!-- 'base.html'을 확장한다 -->
 
 
-<div class="container"></div>
-
+<!-- 'base.html'템플릿의 'content' 블록을 채운다.-->
+{% block content %}
 <div class="post-container">
     {% for post in posts %}
-    <div class="post"><h3>{{ post.title }}</h3>
+    <div class="post">
+        <!--{{ post.pk }}를 이용해서 a tag에 href 속성을 채우시오 -->
+        <!-- ex) /post/3/-->
+        <a href="/post/{{ post.pk}}"><h3>{{ post.title }}</h3></a>
         <p class="content">{{ post.content|linebreaksbr|truncatewords:30 }}</p>
         <p class="right-text">{{ post.created_date }} | <strong>Date</strong></p>
         <p class="right-text">{{ post.author.username }} | <strong>Author</strong></p>
@@ -34,7 +17,4 @@
 
 {% endfor %}
 </div>
-
-</body>
-</html>
-
+{% endblock %}

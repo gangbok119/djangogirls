@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from blog.models import Post
 
@@ -15,13 +16,25 @@ def post_list(request):  # view는 무조건 하나의 인수를 받는다.
     #rendering
     return render(request, 'blog/post_list.html', context)
 
-def post_detail(request):
+def post_detail(request,pk ):
     # Post 인스턴스 1개만 가져옴, 변수명은 posts가 아닌 단일객체를 나타내는 post 사용
-    post=Post.objects.first()
+    try:
+        post=Post.objects.get(pk=pk)
     # 'post' key 값으로 Post 인스턴스 하나 전달.
-    context = {
-        'post':post
-    }
+
+    # get에 실패했을 때 발생하는 예외
+    # Post.DoesNotExist
+    # HTTP로 문자열을 돌려주려면
+    # HttpResponse
+
+        context = {
+            'post':post
+        }
+
+    except Post.DoesNotExist:
+        return HttpResponse('해당 페이지가 존재하지 않습니다. 404 NOT FOUND', status=404)
+        # status로 http 신호를 정할 수 있음 404 등..
+
 
     return render(request, 'blog/post_detail.html', context)
 
