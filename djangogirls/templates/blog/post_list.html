@@ -1,3 +1,6 @@
+<!--static 태그를 사용하기 위해서는 불러와서 사용해야 한다.   -->
+{% load static %}
+
 <!doctype html>
 <html lang="ko">
 <head>
@@ -5,19 +8,32 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Post list</title>
+    <title>블로깅 테스트</title>
     <!-- 정적파일을 참조하는 템플릿 static 태그 - (STATICFILES_DIRS의 path를 기준으로 상대경로) -->
-    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/blog.css' %}">
 </head>
 <body>
-<h1>Post list</h1>
+<div class="blog-header">
+    <div class="container">
+        <h2 class="blog-title"><a href="">나의 블로그</a></h2>
+    </div>
 
-{% for post in posts %}
+</div>
 
-    <h3>{{ post.title }}</h3>
-    <div>{{ post.content|linebreaksbr|truncatewords:10 }}</div>
+
+<div class="container"></div>
+
+<div class="post-container">
+    {% for post in posts %}
+    <div class="post"><h3>{{ post.title }}</h3>
+        <p class="content">{{ post.content|linebreaksbr|truncatewords:30 }}</p>
+        <p class="right-text">{{ post.created_date }} | <strong>Date</strong></p>
+        <p class="right-text">{{ post.author.username }} | <strong>Author</strong></p>
+    </div>
+
 {% endfor %}
-
+</div>
 
 </body>
 </html>
