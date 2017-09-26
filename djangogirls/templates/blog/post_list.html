@@ -6,15 +6,18 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Post list</title>
+    <!-- 정적파일을 참조하는 템플릿 static 태그 - (STATICFILES_DIRS의 path를 기준으로 상대경로) -->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css %}">
 </head>
 <body>
 <h1>Post list</h1>
 
 {% for post in posts %}
 
-    <div>{{ post.title }}</div>
-    <div>{{ post.content|truncatewords:10 }}</div>
+    <h3>{{ post.title }}</h3>
+    <div>{{ post.content|linebreaksbr|truncatewords:10 }}</div>
 {% endfor %}
+
 
 </body>
 </html>
