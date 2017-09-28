@@ -5,13 +5,18 @@
 <div class="post-container">
     <!--하나의 'Post'인스턴스만 출력하도록 변경(post 변수 사용) -->
     <!-- 해당 Post는 content를 전부 출력해야 함.  -->
-    <button class="btn btn-defalut btn-sm btn-back-list" ><a class="btn btn-default btn-sm btn-back-list" href="/"><span></span>목록으로 돌아가기</a></button>
+    <button class="btn btn-defalut btn-sm btn-back-list" ><a class="btn btn-default btn-sm btn-back-list" href="{% url 'post_list %}"><span></span>목록으로 돌아가기</a></button>
 
     <div class="post"><h3>{{ post.title }}</h3>
         <p class="content">{{ post.content|linebreaksbr }}</p>
-        <p class="right-text">{{ post.created_date }} | <strong>Date</strong></p>
+        <p class="right-text">{{ post.published_date }} | <strong>Published Date</strong></p>
         <p class="right-text">{{ post.author.username }} | <strong>Author</strong></p>
+
+
+
+
     </div>
+    <button class="btn btn-defalut btn-sm btn-back-list" ><a class="btn btn-default btn-sm btn-back-list" href="{% url 'post_delete' pk=post.pk %}"><span></span>글 삭제하기</a></button>
 
 
 </div>

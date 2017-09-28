@@ -7,14 +7,20 @@
 .blog-header .blog-title {
     margin: 0;
 }
-.blog-header .blog-title > a, a:hover, a:visited {
-    color: white;
+.blog-header .blog-title > a,
+.blog-header .blog-title > a:hover,
+.blog-header .blog-title > a:visited {
+
     text-decoration: none;
 }
 
 .post-container {
-    margin: 50px;
+
 }
+.post-container > .btn-back-list {
+    margin-top: 10px;
+}
+
 .post-container > .post {
     padding-top: 10px;
     padding-bottom: 10px;

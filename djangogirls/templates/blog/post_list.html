@@ -5,16 +5,23 @@
 <!-- 'base.html'템플릿의 'content' 블록을 채운다.-->
 {% block content %}
 <div class="post-container">
+
     {% for post in posts %}
-    <div class="post">
+        <div class="post">
+
         <!--{{ post.pk }}를 이용해서 a tag에 href 속성을 채우시오 -->
         <!-- ex) /post/3/-->
-        <a href="/post/{{ post.pk}}"><h3>{{ post.title }}</h3></a>
+        <!--컨트롤러의 이름이 아니라 url패턴의 이름... -->
+        <a href="{% url 'post_detail' pk=post.pk %}"><h3>{{ post.title }}</h3></a>
         <p class="content">{{ post.content|linebreaksbr|truncatewords:30 }}</p>
-        <p class="right-text">{{ post.created_date }} | <strong>Date</strong></p>
+        <p class="right-text">{{ post.published_date }} | <strong>Published Date</strong></p>
         <p class="right-text">{{ post.author.username }} | <strong>Author</strong></p>
+          <button class="btn btn-defalut btn-sm btn-back-list" ><a class="btn btn-default btn-sm btn-back-list" href="{% url 'post_delete' pk=post.pk %}"
+ ><span></span>글 삭제하기</a></button>
+
     </div>
 
 {% endfor %}
+
 </div>
 {% endblock %}
