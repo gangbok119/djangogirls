@@ -13,7 +13,7 @@
 
     <div>
         <h2>글 작성</h2>
-        <form action="" method="post">
+        <form action="{% url 'post_add' %}" method="post">
             {% csrf_token %}
             <div class="form-group">
                 <label for="input-title">제목</label>

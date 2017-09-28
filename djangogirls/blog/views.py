@@ -18,7 +18,7 @@ User = get_user_model()  # 유저로 관리되는 모델은 중요하게 다뤄�
 
 def post_list(request):  # view는 무조건 하나의 인수를 받는다.
     # post_list view가 published_date가 존재하는 Post목록만 보여주도록 수정.
-    posts = Post.objects.filter(published_date__isnull=True)
+    posts = Post.objects.filter(published_date__isnull=False)
     context = {
         # posts key의 value는 QuerySet
         'posts': posts,
@@ -41,8 +41,6 @@ def post_detail(request, pk):
         context = {
             'post': post
         }
-        if request.POST.get('publish_check') == 'published':
-            post.publish()
         return render(request, 'blog/post_detail.html', context)
 
 
@@ -76,10 +74,10 @@ def post_add(request):  # 필요한 모든 값을 받는 경우에만 POST 메�
         # Detail화면을 보여주는 작업은 post_detail이 가지고 있으므로 해당 뷰로 리다이렉트해야 함.
 
     else:  # post/add로 get을 통해 들어가는 경우/필요한 내용을 다 작성하지 않은 경우 다시 해당 창을 띄움.
+        context = {}
 
 
-
-        return redirect('post_add')
+        return render(request, 'blog/post_form.html',context)
 
 
 
@@ -112,6 +110,23 @@ def post_add(request):  # 필요한 모든 값을 받는 경우에만 POST 메�
 
 
 def post_delete(request, pk):
-    post = Post.objects.get(pk=pk)
-    post.delete(pk)
-    return redirect('post_list')
+    '''
+    pk에 해당하는 Post 객체를 DB 에서 삭제, (QuerySet.delete() 또는 Model.delete() 메서드 사용)
+    1. post=Post. 해당 객체를 할당
+    2. post 객체를 DB에서 삭제
+    3. post_list를 redirect
+    4. urls.py에 연결
+    5. POST method로 요청시에만 삭제되도록
+    ex) /posts/3/delete
+    :param request:
+    :param pk: Post의 pk
+    :return: redirect('post_list')
+    '''
+    # request가 post요청일 경우에만 처리하도록
+    if request.method == 'POST':
+        post = Post.objects.get(pk=pk)
+        post.delete()
+        return redirect('post_list')
+    # status 403을 통해 url을 직접 접근할 수 없다고 표시
+    else:
+        return HttpResponse('Permission denined', status=403)
