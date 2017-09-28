@@ -26,7 +26,7 @@ urlpatterns = [
     # primary key 라는 의미 - 포스트별로 각각 접근한다는 의미
     url(r'^post/detail/(?P<pk>\d+)/', post_detail, name ='post_detail'),
     # 그룹 이름을 주면 - view를 호출할 시 pk=3 형식으로 해서 kwrgs로
-    url(r'^post/add/', post_add,),
+    url(r'^post/add/', post_add, name=post_add),
     url(r'^post_delete/(?P<pk>\d+)/',post_delete, name='post_delete', )
 
 ]

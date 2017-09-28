@@ -6,11 +6,12 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
 
-
 from blog.models import Post
 
-User = get_user_model()#유저로 관리되는 모델은 중요하게 다뤄짐 - 동적으로 유저모델을 가져오는 메소드.
-#사용자 model class
+User = get_user_model()  # 유저로 관리되는 모델은 중요하게 다뤄짐 - 동적으로 유저모델을 가져오는 메소드.
+
+
+# 사용자 model class
 
 # Create your views here.
 
@@ -40,7 +41,7 @@ def post_detail(request, pk):
         context = {
             'post': post
         }
-        if request.POST.get('publish_check') =='published':
+        if request.POST.get('publish_check') == 'published':
             post.publish()
         return render(request, 'blog/post_detail.html', context)
 
@@ -50,8 +51,8 @@ def post_detail(request, pk):
         # status로 http 신호를 정할 수 있음 404 등..
 
 
-def post_add(request):# 필요한 모든 값을 받는 경우에만 POST 메소드로서 보냄
-    if request.method == 'POST' and request.POST.get('title') and request.POST.get('content') :
+def post_add(request):  # 필요한 모든 값을 받는 경우에만 POST 메소드로서 보냄
+    if request.method == 'POST' and request.POST.get('title') and request.POST.get('content'):
         # request.POST(dict형 객체)에서 'title', 'content'키에 해당하는 value를 받아
         # 새 Post 객체를 생성(save() 호출 없음, 단순 인스턴스 생성)
         # 생성한 후에는 해당 객체의 title, content를 HttpResponse로 전달 - 완료
@@ -62,27 +63,23 @@ def post_add(request):# 필요한 모든 값을 받는 경우에만 POST 메소�
         title = request.POST['title']
         content = request.POST['content']
         author = User.objects.get(username='gangbok119')
-        created_date= timezone.now()
-        is_publish= bool(request.POST.get('is_publish'))
-        post = Post.objects.create(title=title,content=content,author=author,created_date=created_date)
+        created_date = timezone.now()
+        is_publish = bool(request.POST.get('is_publish'))
+        post = Post.objects.create(title=title, content=content, author=author, created_date=created_date)
         if is_publish:
             post.publish()
-        pk = post.pk
-        context={
-            'pk':pk
-        }
+        else:
+            post.save()
+
+        # HttpResponseRedirect 이용    return HttpResponseRedirect(f'post/detail/{post.pk}')
+        return redirect('post_detail', pk=post.pk)
+        # Detail화면을 보여주는 작업은 post_detail이 가지고 있으므로 해당 뷰로 리다이렉트해야 함.
+
+    else:  # post/add로 get을 통해 들어가는 경우/필요한 내용을 다 작성하지 않은 경우 다시 해당 창을 띄움.
 
 
 
-
-
-        return render('blog/post_detail.html', context )
-
-    else:# post/add로 get을 통해 들어가는 경우/필요한 내용을 다 작성하지 않은 경우 다시 해당 창을 띄움.
-        context={}
-
-
-        return render('blog/post_form.html',context)
+        return redirect('post_add')
 
 
 
@@ -98,22 +95,23 @@ def post_add(request):# 필요한 모든 값을 받는 경우에만 POST 메소�
         # UrlResolver(urls.py)
         # /post/detail/ url을 'post_detail' 뷰와 연결
 
-    # 2.post_list.html에 post/add로 갈 수 있는 버튼 추가 - 완료
+        # 2.post_list.html에 post/add로 갈 수 있는 버튼 추가 - 완료
 
-    #3.과제 - post_form.html에 checkbox를 추가 -
-    # 이를 이용해서 publish 여부를 결정
+        # 3.과제 - post_form.html에 checkbox를 추가 -
+        # 이를 이용해서 publish 여부를 결정
 
-    # 4.Post 생성 완료 후(DB 저장 후), post_list페이지로 이동 - 완료
-    # https://docs.djangoproject.com/ko/1.11/topics/http/shortcuts/#redirect
-    # extra) 작성한 Post에 해당하는 post_detail 페이지로 이동 - 해야함
+        # 4.Post 생성 완료 후(DB 저장 후), post_list페이지로 이동 - 완료
+        # https://docs.djangoproject.com/ko/1.11/topics/http/shortcuts/#redirect
+        # extra) 작성한 Post에 해당하는 post_detail 페이지로 이동 - 해야함
 
-    # 5.Post 생성시 Post.objects.create() 메서드 사용 - 완료
+        # 5.Post 생성시 Post.objects.create() 메서드 사용 - 완료
 
-    # 6.extra) Post delete기능 구현 - 완료
-    # def post_delete(request, pk):
-    # pk에 해당하는 Post를 삭제하고, post_list페이지로 이동
+        # 6.extra) Post delete기능 구현 - 완료
+        # def post_delete(request, pk):
+        # pk에 해당하는 Post를 삭제하고, post_list페이지로 이동
+
 
 def post_delete(request, pk):
-    post=Post.objects.get(pk=pk)
+    post = Post.objects.get(pk=pk)
     post.delete(pk)
-    return render("blog/post_list.html")
+    return redirect('post_list')
